@@ -188,7 +188,7 @@ namespace NuGet.PackageManagement.VisualStudio
             else
             {
                 // Assets file changed, recompute transitive origins
-                ClearCachedTransitiveOrigin();
+                CleanCache();
             }
 
             // Otherwise, find Transitive origin and update cache
@@ -302,5 +302,7 @@ namespace NuGet.PackageManagement.VisualStudio
         internal abstract ValueTask<PackageSpec> GetPackageSpecAsync(CancellationToken ct);
 
         internal abstract bool IsCacheHit(bool cacheHitTargets, bool cacheHitPackageSpec, PackageSpec actual, PackageSpec last, FileInfo assets);
+
+        internal abstract void CleanCache();
     }
 }

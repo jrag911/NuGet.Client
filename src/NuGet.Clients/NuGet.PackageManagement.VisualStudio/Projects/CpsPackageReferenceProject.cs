@@ -117,12 +117,7 @@ namespace NuGet.PackageManagement.VisualStudio
         {
             ct.ThrowIfCancellationRequested();
 
-            return await NuGetUIThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                var vt = new Task<PackageSpec>(() => GetPackageSpec());
-                vt.Start();
-                return await vt;
-            });
+            return await Task.FromResult<PackageSpec>(GetPackageSpec());
         }
 
         #region IDependencyGraphProject
@@ -420,7 +415,7 @@ namespace NuGet.PackageManagement.VisualStudio
             return Task.FromResult(NoOpRestoreUtilities.GetProjectCacheFilePath(cacheRoot: spec.RestoreMetadata.OutputPath));
         }
 
-        internal override bool IsCacheHit(bool cacheHitTargets, bool cacheHitPackageSpec, PackageSpec actual, PackageSpec last, FileInfo fileInfo)
+        internal override bool IsCacheUpToDate(bool cacheHitTargets, bool cacheHitPackageSpec, PackageSpec actual, PackageSpec last, FileInfo fileInfo)
         {
             return (fileInfo.Exists && fileInfo.LastWriteTimeUtc > _lastTimeAssetsModified) || !cacheHitTargets || !cacheHitPackageSpec || !ReferenceEquals(actual, last);
         }

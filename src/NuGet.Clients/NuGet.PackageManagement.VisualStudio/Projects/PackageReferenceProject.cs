@@ -270,7 +270,7 @@ namespace NuGet.PackageManagement.VisualStudio
 
         internal string GetTransitiveCacheKey(PackageIdentity transitivePackage)
         {
-            return _projectUniqueName + transitivePackage.ToString();
+            return _projectUniqueName + "/" + transitivePackage.ToString();
         }
 
         internal TransitiveEntry GetCachedTransitiveOrigin(PackageIdentity transitivePackage)

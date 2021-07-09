@@ -217,7 +217,7 @@ namespace NuGet.PackageManagement.VisualStudio
         /// </summary>
         public override async Task<ProjectPackages> GetInstalledAndTransitivePackagesAsync(CancellationToken token)
         {
-            var reading = await GetFullRestoreGraphAsync(token);
+            RestoreGraphRead reading = await GetFullRestoreGraphAsync(token);
 
             if (reading.PackageSpec != null)
             {

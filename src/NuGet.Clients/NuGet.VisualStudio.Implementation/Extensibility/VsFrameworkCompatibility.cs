@@ -109,7 +109,7 @@ namespace NuGet.VisualStudio.Implementation.Extensibility
 
             try
             {
-                return GetNearest(targetFramework, Enumerable.Empty<FrameworkName>(), frameworks);
+                return GetNearestImpl(targetFramework, Enumerable.Empty<FrameworkName>(), frameworks);
             }
             finally
             {
@@ -118,6 +118,21 @@ namespace NuGet.VisualStudio.Implementation.Extensibility
         }
 
         public FrameworkName GetNearest(FrameworkName targetFramework, IEnumerable<FrameworkName> fallbackTargetFrameworks, IEnumerable<FrameworkName> frameworks)
+        {
+            const string eventName = nameof(IVsFrameworkCompatibility2) + "." + nameof(GetNearest);
+            NuGetExtensibilityEtw.EventSource.Write(eventName, NuGetExtensibilityEtw.StartEventOptions);
+
+            try
+            {
+                return GetNearestImpl(targetFramework, fallbackTargetFrameworks, frameworks);
+            }
+            finally
+            {
+                NuGetExtensibilityEtw.EventSource.Write(eventName, NuGetExtensibilityEtw.StopEventOptions);
+            }
+        }
+
+        private FrameworkName GetNearestImpl(FrameworkName targetFramework, IEnumerable<FrameworkName> fallbackTargetFrameworks, IEnumerable<FrameworkName> frameworks)
         {
             if (targetFramework == null)
             {

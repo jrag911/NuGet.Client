@@ -228,10 +228,10 @@ namespace NuGet.DependencyResolver
         public static Task<Tuple<LibraryRange, RemoteMatch>> FindPackageLibraryMatchCachedAsync(
             ConcurrentDictionary<LibraryRange, Task<Tuple<LibraryRange, RemoteMatch>>> cache,
             LibraryRange libraryRange,
-           RemoteWalkContext remoteWalkContext,
+            RemoteWalkContext remoteWalkContext,
             CancellationToken cancellationToken)
         {
-            return cache.GetOrAdd(libraryRange, (cacheKey) => ResolvePackageLibraryMatchAsync(libraryRange, remoteWalkContext, cancellationToken));
+            return cache.GetOrAdd(libraryRange, ResolvePackageLibraryMatchAsync(libraryRange, remoteWalkContext, cancellationToken));
         }
 
         private static async Task<Tuple<LibraryRange, RemoteMatch>> ResolvePackageLibraryMatchAsync(LibraryRange libraryRange, RemoteWalkContext remoteWalkContext, CancellationToken cancellationToken)

@@ -248,24 +248,24 @@ namespace NuGet.DependencyResolver
             return node;
         }
 
-        private Func<LibraryRange, (DependencyResult dependencyResult, LibraryDependency conflictingDependency)> ChainPredicate(Func<LibraryRange, (DependencyResult dependencyResult, LibraryDependency conflictingDependency)> predicate, GraphNode<RemoteResolveResult> node, LibraryDependency dependency)
+        private static Func<LibraryRange, (DependencyResult dependencyResult, LibraryDependency conflictingDependency)> ChainPredicate(Func<LibraryRange, (DependencyResult dependencyResult, LibraryDependency conflictingDependency)> predicate, GraphNode<RemoteResolveResult> node, LibraryDependency dependency)
         {
             var item = node.Item;
 
-            return library =>
+            (DependencyResult dependencyResult, LibraryDependency conflictingDependency) Predicate(LibraryRange libraryRange)
             {
-                if (StringComparer.OrdinalIgnoreCase.Equals(item.Data.Match.Library.Name, library.Name))
+                if (StringComparer.OrdinalIgnoreCase.Equals(item.Data.Match.Library.Name, libraryRange.Name))
                 {
                     return (DependencyResult.Cycle, null);
                 }
 
                 foreach (var d in item.Data.Dependencies)
                 {
-                    if (d != dependency && library.IsEclipsedBy(d.LibraryRange))
+                    if (d != dependency && libraryRange.IsEclipsedBy(d.LibraryRange))
                     {
                         if (d.LibraryRange.VersionRange != null &&
-                            library.VersionRange != null &&
-                            !IsGreaterThanOrEqualTo(d.LibraryRange.VersionRange, library.VersionRange))
+                            libraryRange.VersionRange != null &&
+                            !IsGreaterThanOrEqualTo(d.LibraryRange.VersionRange, libraryRange.VersionRange))
                         {
                             return (DependencyResult.PotentiallyDowngraded, d);
                         }
@@ -274,8 +274,10 @@ namespace NuGet.DependencyResolver
                     }
                 }
 
-                return predicate(library);
-            };
+                return predicate(libraryRange);
+            }
+
+            return Predicate;
         }
 
         // Verifies if minimum version specification for nearVersion is greater than the

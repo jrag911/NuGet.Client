@@ -37,6 +37,9 @@ namespace NuGet.Common
         [DllImport("libc")]
         static extern int uname(IntPtr buf);
 
+        [DllImport("libSystem.Native", EntryPoint = "SystemNative_GetUnixName")]
+        private static extern IntPtr GetUnixName();
+
         public static bool IsWindows
         {
             get => _isWindows.Value;
@@ -148,6 +151,19 @@ namespace NuGet.Common
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
             {
                 return true;
+            }
+
+            try
+            {
+                // The OSPlatform.FreeBSD property only exists in .NET Core 3.1 and higher, whereas this project is also compiled for .NET Standard and .NET Framework.
+                // Therefore RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD) cannot be used to determine whether running on FreeBSD.
+                // But the equivalent code to determine whether running on FreeBSD, can be taken from the dotnet/runtime repo and pasted here to provide this functionality:
+                var ptr = GetUnixName();
+                var os = Marshal.PtrToStringAnsi(ptr);
+                return os == "FREEBSD";
+            }
+            catch
+            {
             }
 
             return false;

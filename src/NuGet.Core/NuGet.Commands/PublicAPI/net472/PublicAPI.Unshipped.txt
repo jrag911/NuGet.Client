@@ -1,0 +1,1 @@
+NuGet.Commands.VerifyCommandRunner.VerifyCommandRunner(NuGet.Configuration.ISettings settings) -> void

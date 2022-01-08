@@ -5968,7 +5968,7 @@ namespace ClassLibrary
 
                 File.WriteAllText(Path.Combine(testDirectory, "NuGet.Config"), customNuGetConfigContent);
                 var mainDirectory = Directory.GetParent(testDirectory).FullName;
-                string packageSource = Path.Combine(mainDirectory, "pkgs");
+                string packageSource = pathContext.PackageSource;
 
                 var prereleaseDependencyAName = "PreReleasePackageA";
                 var prereleaseDependencyAVersion = "4.8.0-beta00011";
@@ -6029,7 +6029,7 @@ namespace ClassLibrary
 
                 string testDirectory = pathContext.WorkingDirectory;
                 var mainDirectory = Directory.GetParent(testDirectory).FullName;
-                string packageSource = Path.Combine(mainDirectory, "pkgs");
+                string packageSource = pathContext.PackageSource;
 
                 var prereleaseDependencyAName = "PreReleasePackageA";
                 var prereleaseDependencyAVersion = "4.8.0-beta00011";
@@ -6113,7 +6113,7 @@ namespace ClassLibrary
 
                 string testDirectory = pathContext.WorkingDirectory;
                 var mainDirectory = Directory.GetParent(testDirectory).FullName;
-                string packageSource = Path.Combine(mainDirectory, "pkgs");
+                string packageSource = pathContext.PackageSource;
 
                 var prereleaseDependencyAName = "PreReleasePackageA";
                 var prereleaseDependencyAVersion = "4.8.0-beta00011";
